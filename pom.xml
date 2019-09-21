@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.tiagods</groupId>
 	<artifactId>rest-project-app</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.0-RELEASE</version>
 	<name>rest-project-api</name>
 	<description>Demo project for Spring Boot</description>
 
