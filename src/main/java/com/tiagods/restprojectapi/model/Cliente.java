@@ -4,19 +4,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
-import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
-import com.fasterxml.jackson.annotation.JsonInclude;
+	import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
@@ -27,19 +26,16 @@ public class Cliente {
 	private String nome;
 	@JsonInclude(Include.NON_NULL)
 	private String email;
-	@JsonInclude(Include.NON_NULL)
-	private String telefone;
 	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	@DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
 	private LocalDateTime criadoEm;
+	@OneToMany(cascade= CascadeType.ALL, orphanRemoval = true)
+	private List<Telefone> telefones = new ArrayList<>();
 	
 	@PrePersist
 	private void prePersist(){
 		this.criadoEm = LocalDateTime.now();
 	}
-	
-	@Transient
-	private List<Produto> produtos = new ArrayList<>();
 	public Long getId() {
 		return id;
 	}
@@ -58,23 +54,17 @@ public class Cliente {
 	public String getEmail() {
 		return email;
 	}
-	public String getTelefone() {
-		return telefone;
-	}
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
 	public LocalDateTime getCriadoEm() {
 		return criadoEm;
 	}
 	public void setCriadoEm(LocalDateTime criadoEm) {
 		this.criadoEm = criadoEm;
 	}
-	public List<Produto> getProdutos() {
-		return produtos;
+	public List<Telefone> getTelefones() {
+		return telefones;
 	}
-	public void setProdutos(List<Produto> produtos) {
-		this.produtos = produtos;
+	public void setTelefones(List<Telefone> telefones) {
+		this.telefones = telefones;
 	}
 	@Override
 	public int hashCode() {
