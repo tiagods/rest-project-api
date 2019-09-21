@@ -15,7 +15,7 @@ import com.tiagods.restprojectapi.model.Cliente;
 import com.tiagods.restprojectapi.service.ClientesService;
 
 @RestController
-@RequestMapping("cliente")
+@RequestMapping("clientes")
 public class ClienteResource {
 	
 	@Autowired
@@ -26,8 +26,8 @@ public class ClienteResource {
 		 return new ResponseEntity<>(clientes.listar(), HttpStatus.OK);
 	 }
 	 @PostMapping
-	 public ResponseEntity<Cliente> post(@RequestBody Cliente cliente) {
-		 return new ResponseEntity<>(clientes.salvar(cliente), HttpStatus.CREATED);
+	 public ResponseEntity<Void> post(@RequestBody Cliente cliente) {
+		return new ResponseEntity<>(clientes.salvar(cliente));
 	 }
 	
 }

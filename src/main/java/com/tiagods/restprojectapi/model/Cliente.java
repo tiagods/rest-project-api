@@ -14,6 +14,10 @@ import javax.persistence.Transient;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
 public class Cliente {
@@ -21,7 +25,9 @@ public class Cliente {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
-	private String cpf;
+	@JsonInclude(Include.NON_NULL)
+	private String email;
+	@JsonInclude(Include.NON_NULL)
 	private String telefone;
 	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	@DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
@@ -46,11 +52,11 @@ public class Cliente {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public String getCpf() {
-		return cpf;
+	public void setEmail(String email) {
+		this.email = email;
 	}
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
+	public String getEmail() {
+		return email;
 	}
 	public String getTelefone() {
 		return telefone;
