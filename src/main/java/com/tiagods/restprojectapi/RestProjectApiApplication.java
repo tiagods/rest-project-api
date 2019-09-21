@@ -1,13 +1,13 @@
-package com.tiagods.restprojectapp;
+package com.tiagods.restprojectapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RestProjectAppApplication {
+public class RestProjectApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(RestProjectAppApplication.class, args);
+		SpringApplication.run(RestProjectApiApplication.class, args);
 	}
 
 }
