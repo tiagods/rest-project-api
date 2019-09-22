@@ -1,16 +1,21 @@
 package com.tiagods.restprojectapi.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jms.JmsException;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiagods.restprojectapi.exception.ClienteNaoEnviadoException;
 import com.tiagods.restprojectapi.exception.ClienteNotFoundException;
 import com.tiagods.restprojectapi.jms.JmsMessageListener;
@@ -37,32 +42,27 @@ public class ClientesService {
 		return clientes.findAll();
 	}
 	public HttpStatus salvar(Cliente cliente) {
-		JSONObject json = new JSONObject(cliente);
 		try {
-			jms.putQueue(json.toString());
+			ObjectMapper mapper = new ObjectMapper();
+			String value = mapper.writeValueAsString(cliente);
+			jms.putQueue(value);
 			return HttpStatus.CREATED;
 		}catch (JmsException e) {
 			throw new ClienteNaoEnviadoException("Erro no JMS, não foi possivel enviar mensagem para servidor");
+		} catch (JsonProcessingException e) {
+			throw new ClienteNaoEnviadoException("Erro no cadastro, falha ao converter objeto em json");
 		}
 	}
 	public void salvar(String cli) {
-		JSONObject json = new JSONObject(cli);
-		Cliente cliente = new Cliente();
-		if(json.has("id")) cliente.setId(json.getLong("id"));
-		cliente.setNome(json.getString("nome"));
-		cliente.setEmail(json.getString("email"));
-		
-		List<Telefone> telefones = new ArrayList<>();
-		
-		JSONArray array = json.getJSONArray("telefones");
-		for(int i = 0; i<array.length(); i++) {
-			JSONObject obj = array.getJSONObject(i);
-			Telefone tel = new Telefone(cliente,obj.getString("numero"));
-			if(json.has("id")) tel.setId(obj.getLong("id"));
-			telefones.add(tel);
+		ObjectMapper mapper = new ObjectMapper();
+		Cliente cliente;
+		try {
+			cliente = mapper.readValue(cli, Cliente.class);
+			cliente.getTelefones().forEach(c->c.setCliente(cliente));
+			clientes.save(cliente);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		cliente.setTelefones(telefones);
-		clientes.save(cliente);
 	}
 
 	public void deleteAll() {

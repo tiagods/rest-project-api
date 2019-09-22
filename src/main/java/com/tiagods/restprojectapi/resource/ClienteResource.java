@@ -29,11 +29,11 @@ public class ClienteResource {
 		 return new ResponseEntity<>(clientes.listar(), HttpStatus.OK);
 	 }
 	 @GetMapping(value = "/{id}")
-	 public ResponseEntity<?> buscar(@PathVariable("id") Long id) {
+	 public ResponseEntity<Cliente> buscar(@PathVariable("id") Long id) {
 		 return new ResponseEntity<>(clientes.buscar(id),HttpStatus.OK);
 	 }
 	 @PostMapping
-	 public ResponseEntity<Void> post(@RequestBody Cliente cliente) {
+	 public ResponseEntity<?> post(@RequestBody Cliente cliente) {
 		return new ResponseEntity<>(clientes.salvar(cliente));
 	 }
 	
@@ -44,10 +44,11 @@ public class ClienteResource {
 		 cli = cliente;
 		 return new ResponseEntity<>(clientes.salvar(cli));
 	 }
-	 @PutMapping(value = "/telefone/{id}")
+	 @PostMapping(value = "/{id}/telefone")
 	 public ResponseEntity<Void> adicionarContato(@RequestBody Telefone telefone, @PathVariable("id") Long id) {
 		 Cliente cli = clientes.buscar(id);
 		 cli.setId(id);
+		 telefone.setCliente(cli);
 		 cli.getTelefones().add(telefone);
 		 return new ResponseEntity<>(clientes.salvar(cli));
 	 }

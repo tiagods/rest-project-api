@@ -15,7 +15,7 @@ import javax.persistence.PrePersist;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-	import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
@@ -26,15 +26,15 @@ public class Cliente {
 	private String nome;
 	@JsonInclude(Include.NON_NULL)
 	private String email;
-	@JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-	@DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
-	private LocalDateTime criadoEm;
+	@JsonInclude(Include.NON_NULL)
 	@OneToMany(cascade= CascadeType.ALL, orphanRemoval = true)
 	private List<Telefone> telefones = new ArrayList<>();
 	
-	@PrePersist
-	private void prePersist(){
-		this.criadoEm = LocalDateTime.now();
+	public Cliente() {}
+	
+	public Cliente(String nome, String email) {
+		this.nome=nome;
+		this.email=email;
 	}
 	public Long getId() {
 		return id;
@@ -53,12 +53,6 @@ public class Cliente {
 	}
 	public String getEmail() {
 		return email;
-	}
-	public LocalDateTime getCriadoEm() {
-		return criadoEm;
-	}
-	public void setCriadoEm(LocalDateTime criadoEm) {
-		this.criadoEm = criadoEm;
 	}
 	public List<Telefone> getTelefones() {
 		return telefones;

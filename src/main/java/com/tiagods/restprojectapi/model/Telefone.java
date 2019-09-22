@@ -8,15 +8,24 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
-public class Telefone {
+public class Telefone{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String numero;
+	@JsonIgnore
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="cliente")
 	private Cliente cliente;
+	
+	public Telefone() {}
+	
+	public Telefone(String numero) {
+		this.numero=numero;
+	}
 	
 	public Telefone(Cliente cliente, String numero) {
 		this.cliente=cliente;
